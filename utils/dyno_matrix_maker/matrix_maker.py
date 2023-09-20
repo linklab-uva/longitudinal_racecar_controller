@@ -6,6 +6,7 @@ from matplotlib import cm
 from math import isnan, nan
 import matplotlib.pyplot as plt
 from scipy.interpolate import make_interp_spline, make_smoothing_spline, BSpline
+from scipy.ndimage import gaussian_filter1d 
 from scipy.signal import butter, filtfilt, savgol_filter
 
 dataframe = pd.read_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "iac_dyno_data.csv"))
@@ -26,7 +27,7 @@ torque_matrix[2518- 1601:, 75] = np.array(dataframe['75'])
 torque_matrix[2518- 1601:, 80] = np.array(dataframe['80'])
 torque_matrix[2518- 1601:, 100] = np.array(dataframe['100'])
 
-b,a = butter(1,0.002, 'low')
+b,a = butter(3,0.001, 'low')
 b2,a2 = butter(5,0.1, 'low')
 
 f2 = plt.figure(2)
@@ -46,9 +47,8 @@ ax.set_xlabel('Throttle Percent', fontsize=12, rotation=150)
 ax.set_ylabel('Engine RPM', fontsize=12)
 ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
 
-plt.show()
+# plt.show()
 
-exit()
 for item in valid_thr:
     rpm = np.array(dataframe['RPM'])
     data = np.array(dataframe[f'{item}'])
@@ -127,7 +127,7 @@ s2 = make_smoothing_spline(absc, GD1[3300])
 # plt.show()
 new_df = pd.DataFrame(GD1)
 
-# new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
+new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
 f2 = plt.figure(2)
 f2.set_figwidth(10)
 f2.set_figheight(10)
