@@ -45,14 +45,14 @@ torque_matrix = np.zeros((7600 - 1600, y_vals))
 valid_thr = [40, 50, 60, 65, 70, 75, 80, 100]
 torque_matrix.fill(np.nan)
 
-torque_matrix[2900 - 1601 : 7339 - 1600,  40] = torque_40[:, 1]
-torque_matrix[3000 - 1601 : 7499 - 1600,  50] = torque_50[:, 1]
-torque_matrix[3000 - 1601 : 7499 - 1600,  60] = torque_60[:, 1]
-torque_matrix[3080 - 1601 : 7499 - 1600,  65] = torque_65[:, 1]
-torque_matrix[3120 - 1601 : 7479 - 1600,  70] = torque_70[:, 1]
-torque_matrix[3080 - 1601 : 7489 - 1600,  75] = torque_75[:, 1]
-torque_matrix[3000 - 1601 : 7499 - 1600,  80] = torque_80[:, 1]
-torque_matrix[3240 - 1601 : 7499 - 1600,  100] = torque_100[:, 1]
+torque_matrix[2900 - 1601 : 7339 - 1600,  40] = torque_40[:, 2]
+torque_matrix[3000 - 1601 : 7499 - 1600,  50] = torque_50[:, 2]
+torque_matrix[3000 - 1601 : 7499 - 1600,  60] = torque_60[:, 2]
+torque_matrix[3080 - 1601 : 7499 - 1600,  65] = torque_65[:, 2]
+torque_matrix[3120 - 1601 : 7479 - 1600,  70] = torque_70[:, 2]
+torque_matrix[3080 - 1601 : 7489 - 1600,  75] = torque_75[:, 2]
+torque_matrix[3000 - 1601 : 7499 - 1600,  80] = torque_80[:, 2]
+torque_matrix[3240 - 1601 : 7499 - 1600,  100] = torque_100[:, 2]
 
 
 
@@ -157,7 +157,7 @@ plt.legend()
 plt.show()
 new_df = pd.DataFrame(GD1)
 
-new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
+# new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
 f2 = plt.figure(2)
 f2.set_figwidth(10)
 f2.set_figheight(10)
