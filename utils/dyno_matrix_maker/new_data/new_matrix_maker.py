@@ -57,8 +57,8 @@ torque_matrix[3240 - 1601 : 7499 - 1600,  100] = torque_100[:, 2]
 
 
 
-b,a = butter(1,0.003, 'low')
-b2,a2 = butter(1,0.1, 'low')
+b,a = butter(2,0.005, 'low')
+b2,a2 = butter(2,0.2, 'low')
 
 f2 = plt.figure(2)
 f2.set_figwidth(10)
@@ -148,16 +148,16 @@ for idx in range(len(GD1)):
 
     GD1[idx, :] = filtfilt(b2, a2, GD1[idx, :])
     
-absc = np.arange(0, 101)
-s1 = make_smoothing_spline(absc, GD1[5300])
-s2 = make_smoothing_spline(absc, GD1[3300])
-plt.plot(absc, s1(absc), label="6900")
-plt.plot(absc, s2(absc), label="4900")
-plt.legend()
-plt.show()
+# absc = np.arange(0, 101)
+# s1 = make_smoothing_spline(absc, GD1[5300])
+# s2 = make_smoothing_spline(absc, GD1[3300])
+# plt.plot(absc, s1(absc), label="6900")
+# plt.plot(absc, s2(absc), label="4900")
+# plt.legend()
+# plt.show()
 new_df = pd.DataFrame(GD1)
 
-# new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
+new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
 f2 = plt.figure(2)
 f2.set_figwidth(10)
 f2.set_figheight(10)
@@ -175,4 +175,4 @@ ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
 # ax.yaxis._axinfo['label']['space_factor'] = 3.0
 # ax.plot_wireframe(xx + 1, yy + 1600, torque_matrix, rstride=100, cstride=10, color='k')
 
-plt.show()
+# plt.show()
