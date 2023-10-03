@@ -175,4 +175,4 @@ ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
 # ax.yaxis._axinfo['label']['space_factor'] = 3.0
 # ax.plot_wireframe(xx + 1, yy + 1600, torque_matrix, rstride=100, cstride=10, color='k')
 
-# plt.show()
+plt.show()
