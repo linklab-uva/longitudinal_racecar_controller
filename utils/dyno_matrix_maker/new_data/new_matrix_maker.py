@@ -118,7 +118,7 @@ for rpm in range(7600 - 1600):
 
     if index == 0:
         continue
-    d1 = interpolate.interp1d([0, index], [0, torque_matrix[rpm, index]], fill_value='extrapolate', kind='linear')
+    d1 = interpolate.interp1d([0, index], [5, torque_matrix[rpm, index]], fill_value='extrapolate', kind='linear')
     
     arr1 = d1(np.arange(0, index, 1))
     arr1[arr1 < 0] = 0.0
@@ -142,11 +142,13 @@ GD1 = interpolate.griddata((x1, y1), newarr, (xx, yy), method='linear', fill_val
 for idx in range(len(GD1[0])):
 
     # spline = make_smoothing_spline(torque_matrix[idx, :])
-    GD1[:, idx] = filtfilt(b, a, GD1[:, idx])
+    # GD1[:, idx] = filtfilt(b, a, GD1[:, idx])
+    GD1[:, idx] = gaussian_filter1d(GD1[:, idx], 5)
 rpm_splines = []
 for idx in range(len(GD1)):
 
-    GD1[idx, :] = filtfilt(b2, a2, GD1[idx, :])
+    # GD1[idx, :] = filtfilt(b2, a2, GD1[idx, :])
+    GD1[idx, :] = gaussian_filter1d(GD1[idx, :], 5)
     
 # absc = np.arange(0, 101)
 # s1 = make_smoothing_spline(absc, GD1[5300])
