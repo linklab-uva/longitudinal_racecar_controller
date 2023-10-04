@@ -118,7 +118,7 @@ for rpm in range(7600 - 1600):
 
     if index == 0:
         continue
-    d1 = interpolate.interp1d([0, index], [5, torque_matrix[rpm, index]], fill_value='extrapolate', kind='linear')
+    d1 = interpolate.interp1d([0, index], [0, torque_matrix[rpm, index]], fill_value='extrapolate', kind='linear')
     
     arr1 = d1(np.arange(0, index, 1))
     arr1[arr1 < 0] = 0.0
