@@ -143,12 +143,12 @@ for idx in range(len(GD1[0])):
 
     # spline = make_smoothing_spline(torque_matrix[idx, :])
     # GD1[:, idx] = filtfilt(b, a, GD1[:, idx])
-    GD1[:, idx] = gaussian_filter1d(GD1[:, idx], 5)
+    GD1[:, idx] = gaussian_filter1d(GD1[:, idx], 2)
 rpm_splines = []
 for idx in range(len(GD1)):
 
     # GD1[idx, :] = filtfilt(b2, a2, GD1[idx, :])
-    GD1[idx, :] = gaussian_filter1d(GD1[idx, :], 5)
+    GD1[idx, :] = gaussian_filter1d(GD1[idx, :], 2)
     
 # absc = np.arange(0, 101)
 # s1 = make_smoothing_spline(absc, GD1[5300])
@@ -168,11 +168,21 @@ ax = plt.axes(projection='3d')
 
 GD1[GD1 < 0] = 0.0
 
-ax.plot_wireframe(xx + 1, yy + 1600, GD1, rstride=100, cstride=5, color='k', linewidth=0.8)
+ax.plot_wireframe(xx + 1, yy + 1600, GD1, rstride=200, cstride=5, color='k', linewidth=0.8)
+for item in valid_thr:
+    data = torque_matrix[:, item]
+    rpm = np.arange(1600, 7600)
+    rpm = rpm[~np.isnan(data)]
+    data = data[~np.isnan(data)]
+    ax.scatter(item, rpm, data, s= 0.8)
 
 ax.set_xlabel('Throttle Percent', fontsize=12, rotation=150)
+ax.set_proj_type('persp')
+ax.view_init(azim=225)
 ax.set_ylabel('Engine RPM', fontsize=12)
 ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
+plt.savefig("/mnt/c/Users/johnl/OneDrive/College/!Current Semester/CS Research/overlay_torque_map_new.pdf", format='pdf', dpi=1200, bbox_inches='tight')
+
 # plt.axis('equal')
 # ax.yaxis._axinfo['label']['space_factor'] = 3.0
 # ax.plot_wireframe(xx + 1, yy + 1600, torque_matrix, rstride=100, cstride=10, color='k')
