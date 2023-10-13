@@ -159,7 +159,7 @@ for idx in range(len(GD1)):
 # plt.show()
 new_df = pd.DataFrame(GD1)
 
-new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
+# new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
 f2 = plt.figure(2)
 f2.set_figwidth(10)
 f2.set_figheight(10)
@@ -181,7 +181,7 @@ ax.set_proj_type('persp')
 ax.view_init(azim=225)
 ax.set_ylabel('Engine RPM', fontsize=12)
 ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
-plt.savefig("/mnt/c/Users/johnl/OneDrive/College/!Current Semester/CS Research/overlay_torque_map_new.pdf", format='pdf', dpi=1200, bbox_inches='tight')
+# plt.savefig("/mnt/c/Users/johnl/OneDrive/College/!Current Semester/CS Research/overlay_torque_map_new.pdf", format='pdf', dpi=1200, bbox_inches='tight')
 
 # plt.axis('equal')
 # ax.yaxis._axinfo['label']['space_factor'] = 3.0
