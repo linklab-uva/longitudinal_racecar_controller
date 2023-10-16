@@ -94,7 +94,7 @@ for item in valid_thr:
             break
 
     if index > 0:
-        d1 = interpolate.interp1d([1300, rpm[index]], [0, data[index]], fill_value='extrapolate', kind='linear')
+        d1 = interpolate.interp1d([1300, rpm[index]], [-10, data[index]], fill_value='extrapolate', kind='linear')
         arr1 = d1(np.arange(1600, rpm[index], 1))
         arr1[arr1 < 0] = 0.0
         torque_matrix[:rpm[index] - 1600, item] = arr1
