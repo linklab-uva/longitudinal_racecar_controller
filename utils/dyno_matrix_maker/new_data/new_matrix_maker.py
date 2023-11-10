@@ -41,18 +41,18 @@ for item in range(10):
 
 
 y_vals = int(1e2) + 1
-torque_matrix = np.zeros((7600 - 1600, y_vals))
+torque_matrix = np.zeros((7600 - 1200, y_vals))
 valid_thr = [40, 50, 60, 65, 70, 75, 80, 100]
 torque_matrix.fill(np.nan)
 
-torque_matrix[2900 - 1601 : 7339 - 1600,  40] = torque_40[:, 2]
-torque_matrix[3000 - 1601 : 7499 - 1600,  50] = torque_50[:, 2]
-torque_matrix[3000 - 1601 : 7499 - 1600,  60] = torque_60[:, 2]
-torque_matrix[3080 - 1601 : 7499 - 1600,  65] = torque_65[:, 2]
-torque_matrix[3120 - 1601 : 7479 - 1600,  70] = torque_70[:, 2]
-torque_matrix[3080 - 1601 : 7489 - 1600,  75] = torque_75[:, 2]
-torque_matrix[3000 - 1601 : 7499 - 1600,  80] = torque_80[:, 2]
-torque_matrix[3240 - 1601 : 7499 - 1600,  100] = torque_100[:, 2]
+torque_matrix[2900 - 1201 : 7339 - 1200,  40] = torque_40[:, 2]
+torque_matrix[3000 - 1201 : 7499 - 1200,  50] = torque_50[:, 2]
+torque_matrix[3000 - 1201 : 7499 - 1200,  60] = torque_60[:, 2]
+torque_matrix[3080 - 1201 : 7499 - 1200,  65] = torque_65[:, 2]
+torque_matrix[3120 - 1201 : 7479 - 1200,  70] = torque_70[:, 2]
+torque_matrix[3080 - 1201 : 7489 - 1200,  75] = torque_75[:, 2]
+torque_matrix[3000 - 1201 : 7499 - 1200,  80] = torque_80[:, 2]
+torque_matrix[3240 - 1201 : 7499 - 1200,  100] = torque_100[:, 2]
 
 
 
@@ -67,11 +67,11 @@ ax = plt.axes(projection='3d')
 # ax = plt.figure().add_subplot(projection='3d')
 for item in valid_thr:
     data = torque_matrix[:, item]
-    rpm = np.arange(1600, 7600)
+    rpm = np.arange(1200, 7600)
     rpm = rpm[~np.isnan(data)]
     data = data[~np.isnan(data)]
     ax.scatter(item, rpm, data, s= 0.8)
-ax.set_ylim(1600, 7000)
+ax.set_ylim(1200, 7000)
 ax.set_xlim(0, 100)
 ax.set_xlabel('Throttle Percent', fontsize=12, rotation=150)
 ax.set_ylabel('Engine RPM', fontsize=12)
@@ -80,7 +80,7 @@ ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
 # plt.show()
 
 for item in valid_thr:
-    rpm = np.arange(1600, 7600)
+    rpm = np.arange(1200, 7600)
     data = torque_matrix[:, item]
     index = 0
     endindex = 0
@@ -94,20 +94,23 @@ for item in valid_thr:
             break
 
     if index > 0:
-        d1 = interpolate.interp1d([1300, rpm[index]], [-10, data[index]], fill_value='extrapolate', kind='linear')
-        arr1 = d1(np.arange(1600, rpm[index], 1))
+        # print([1100 + 1200, 1200 + 1200, 1250 + 1200, 1300 + 1200, 1350 + 1200, 1400 + 1200] + list(rpm[index:index+100]))
+        # print([-10, 0, 25, 55, 85, 100] +  list(data[index:index + 100]))
+        
+        d1 = interpolate.interp1d([1100, 1200, 1300, 1400, 1600] + list(rpm[index:index+100]), [-10, 0, 10, 25, 40] +  list(data[index:index + 100]), fill_value="extrapolate", kind='quadratic')
+        arr1 = d1(np.arange(1200, rpm[index], 1))
         arr1[arr1 < 0] = 0.0
-        torque_matrix[:rpm[index] - 1600, item] = arr1
+        torque_matrix[:rpm[index] - 1200, item] = arr1
     if endindex > 0:
         # print(rpm[endindex - 10 : endindex])
         # print(data[endindex - 10 : endindex])
         # d2 = interpolate.interp1d(rpm[endindex - 10 : 7000], data[endindex - 10 : endindex], fill_value=0.0, kind='nearest')
         # arr2 = d1(np.arange(rpm[endindex], 7000, 1))
         # arr2[arr2 < 0] = 0.0
-        arr2 = np.ones(torque_matrix[rpm[endindex]-1600:, item].shape) * data[endindex]
-        torque_matrix[rpm[endindex]-1600:, item] = arr2
+        arr2 = np.ones(torque_matrix[rpm[endindex]-1200:, item].shape) * data[endindex]
+        torque_matrix[rpm[endindex]-1200:, item] = arr2
 
-for rpm in range(7600 - 1600):
+for rpm in range(7600 - 1200):
 
     index = 0
     for idx, val in enumerate(torque_matrix[rpm, :]):
@@ -159,7 +162,7 @@ for idx in range(len(GD1)):
 # plt.show()
 new_df = pd.DataFrame(GD1)
 
-# new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
+new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
 f2 = plt.figure(2)
 f2.set_figwidth(10)
 f2.set_figheight(10)
@@ -168,10 +171,10 @@ ax = plt.axes(projection='3d')
 
 GD1[GD1 < 0] = 0.0
 
-ax.plot_wireframe(xx + 1, yy + 1600, GD1, rstride=200, cstride=5, color='k', linewidth=0.8)
+ax.plot_wireframe(xx + 1, yy + 1200, GD1, rstride=200, cstride=5, color='k', linewidth=0.8)
 for item in valid_thr:
     data = torque_matrix[:, item]
-    rpm = np.arange(1600, 7600)
+    rpm = np.arange(1200, 7600)
     rpm = rpm[~np.isnan(data)]
     data = data[~np.isnan(data)]
     ax.scatter(item, rpm, data, s= 0.8)
@@ -185,6 +188,6 @@ ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
 
 # plt.axis('equal')
 # ax.yaxis._axinfo['label']['space_factor'] = 3.0
-# ax.plot_wireframe(xx + 1, yy + 1600, torque_matrix, rstride=100, cstride=10, color='k')
+# ax.plot_wireframe(xx + 1, yy + 1200, torque_matrix, rstride=100, cstride=10, color='k')
 
 plt.show()
