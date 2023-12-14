@@ -65,17 +65,17 @@ f2.set_figwidth(10)
 f2.set_figheight(10)
 ax = plt.axes(projection='3d')
 # ax = plt.figure().add_subplot(projection='3d')
-for item in valid_thr:
-    data = torque_matrix[:, item]
-    rpm = np.arange(1200, 7600)
-    rpm = rpm[~np.isnan(data)]
-    data = data[~np.isnan(data)]
-    ax.scatter(item, rpm, data, s= 0.8)
-ax.set_ylim(1200, 7000)
-ax.set_xlim(0, 100)
-ax.set_xlabel('Throttle Percent', fontsize=12, rotation=150)
-ax.set_ylabel('Engine RPM', fontsize=12)
-ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
+# for item in valid_thr:
+#     data = torque_matrix[:, item]
+#     rpm = np.arange(1200, 7600)
+#     rpm = rpm[~np.isnan(data)]
+#     data = data[~np.isnan(data)]
+#     ax.scatter(item, rpm, data, s= 0.8)
+# ax.set_ylim(1200, 7000)
+# ax.set_xlim(0, 100)
+# ax.set_xlabel('Throttle Percent', fontsize=12, rotation=150)
+# ax.set_ylabel('Engine RPM', fontsize=12)
+# ax.set_zlabel('Torque (nm)', fontsize=12, rotation=60)
 
 # plt.show()
 
@@ -136,7 +136,8 @@ xx, yy = np.meshgrid(x, y)
 
 x1 = xx[~array.mask]
 y1 = yy[~array.mask]
-newarr = array[~array.mask]
+newarr = array[~array.mask] / (790 * .3113)
+
 
 points = np.column_stack([x1, y1])
 
@@ -162,23 +163,41 @@ for idx in range(len(GD1)):
 # plt.show()
 new_df = pd.DataFrame(GD1)
 
-new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
+# new_df.to_csv(os.path.join(os.path.realpath(os.path.dirname(__file__)), "output_matrix.csv"), sep=',', header=False, index=False)
 f2 = plt.figure(2)
 f2.set_figwidth(10)
 f2.set_figheight(10)
 ax = plt.axes(projection='3d')
 # ax = plt.figure().add_subplot(projection='3d')
+gamex = np.arange(0, torque_matrix.shape[1])
+gamey = np.arange(0, torque_matrix.shape[0]) + 1200
+gameZ = np.ones([torque_matrix.shape[0], torque_matrix.shape[1]]) / (790 * .3113)
+thr_mult = interpolate.interp1d([0, 20, 40, 55, 100], [0, .12, .30, .70, 1], kind='linear')
+# thr_mult = 102.1216 + (6.81911 - 102.1216)/(1 + (gamex/48.80316)**5.419191)
+gamez = (gamey**2 * -0.0000456821 + 0.489643 * gamey - 754.247) / (790 * .3113)
+# gamez[gamey < 3000] = gamez[3000-1200]
+# gamez[gamey > 1050] -= 30
+# gamez[gamez < 10] = 10
+gamez[gamez < 0] = 0
+
+    
+for idx, col in enumerate(gameZ[0]):
+    gameZ[:, idx] = gamez * thr_mult(idx)
+
+gameX, gameY = np.meshgrid(gamex, gamey)
+
+# GD2 = interpolate.griddata((gameX, gameY), gameZ, (gameX, gameY), method='nearest', fill_value=0.0)
+
 
 GD1[GD1 < 0] = 0.0
-
+ax.plot_wireframe(gameX + 1, gameY, gameZ, color='r')
 ax.plot_wireframe(xx + 1, yy + 1200, GD1, rstride=200, cstride=5, color='k', linewidth=0.8)
-for item in valid_thr:
-    data = torque_matrix[:, item]
-    rpm = np.arange(1200, 7600)
-    rpm = rpm[~np.isnan(data)]
-    data = data[~np.isnan(data)]
-    ax.scatter(item, rpm, data, s= 0.8)
-
+# for item in valid_thr:
+#     data = torque_matrix[:, item]
+#     rpm = np.arange(1200, 7600)
+#     rpm = rpm[~np.isnan(data)]
+#     data = data[~np.isnan(data)]
+#     ax.scatter(item, rpm, data, s= 0.8)
 ax.set_xlabel('Throttle Percent', fontsize=12, rotation=150)
 ax.set_proj_type('persp')
 ax.view_init(azim=225)
